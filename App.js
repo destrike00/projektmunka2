@@ -10,7 +10,7 @@ function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, height: "100%" }}>
       <Box w="95%" marginTop="10px" variant="whitebox" alignSelf="center">
-        <Text>a faszom kivan</Text>
+        <Text>asd</Text>
       </Box>
       <HStack
         w="95%"
@@ -24,10 +24,10 @@ function HomeScreen({ navigation }) {
 
         <Flex h="100%" w="45%" flexDirection="column">
           <Box w="100%" h="40%" variant="whitebox">
-            <Text>a faszom kivan</Text>
+            <Text>asd</Text>
           </Box>
           <Box w="100%" h="40%" variant="whitebox">
-            <Text>a faszom kivan</Text>
+            <Text>asd</Text>
           </Box>
         </Flex>
       </HStack>
