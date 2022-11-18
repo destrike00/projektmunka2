@@ -31,11 +31,12 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+   # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+CSRF_COOKIE_SECURE = False
 
 ROOT_URLCONF = 'main.urls'
 
@@ -62,7 +63,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'ParkingSpaceDB',
         'USER': 'postgres',
-        'PASSWORD': 'Wanrltw',
+        'PASSWORD': 'kiscica',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
