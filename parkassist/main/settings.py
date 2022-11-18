@@ -60,7 +60,7 @@ WSGI_APPLICATION = 'main.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'teszt',
+        'NAME': 'ParkingSpaceDB',
         'USER': 'postgres',
         'PASSWORD': 'Wanrltw',
         'HOST': '127.0.0.1',
