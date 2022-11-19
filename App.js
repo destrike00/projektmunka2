@@ -1,37 +1,73 @@
 import * as React from "react";
-import { Button, View } from "react-native";
+import { Button } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
-import { Flex, Stack, HStack, Box, Text } from "native-base";
+import { View, Flex, Stack, HStack, Box, Text } from "native-base";
 import { NativeBaseProvider } from "native-base";
 import { dustrinTheme } from "./src/style/theme";
 import Map from "./src/components/maps";
+
+const ParkingLotItem = () => {
+  return <Box h="35px" w="15px" bg="green.500" p="3" margin="5px" />;
+};
 function HomeScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, height: "100%" }}>
-      <Box w="95%" marginTop="10px" variant="whitebox" alignSelf="center">
-        <Text>asd</Text>
+    <>
+      <Box
+        w="95%"
+        h="20%"
+        marginTop="10px"
+        variant="whitebox"
+        alignSelf="center"
+        style={{ backgroundColor: "black" }}
+      >
+        <Text fontSize="24" fontWeight={"bold"} color="white">
+          Szabad parkolóhely nyilvántartó rendszer
+        </Text>
       </Box>
-      <HStack
+      <Stack
         w="95%"
         h="100%"
         alignSelf="center"
         justifyContent="space-between"
+        flexDirection={{ base: "column", lg: "row" }}
       >
-        <Box w="50%" h="83%" variant="whitebox" p="1">
+        <Box w={{ base: "100%", lg: "50%" }} h="83%" variant="whitebox" p="1">
           <Map />
         </Box>
 
-        <Flex h="100%" w="45%" flexDirection="column">
-          <Box w="100%" h="40%" variant="whitebox">
-            <Text>asd</Text>
+        <Flex
+          h="100%"
+          w={{ base: "100%", lg: "45%" }}
+          flexDirection="column"
+          alignItems={{ base: "center" }}
+        >
+          <Box w="100%" variant="whitebox">
+            <Flex h="10%" w="100%" alignItems="center" justifyContent="center">
+              <Text fontWeight={"bold"} fontSize="16">
+                P2 parkolóház
+              </Text>
+            </Flex>
+            <Stack flexWrap="wrap" flexDirection={"row"}>
+              {Array(105)
+                .fill(1)
+                .map((el, i) => {
+                  return <ParkingLotItem />;
+                })}
+            </Stack>
           </Box>
-          <Box w="100%" h="40%" variant="whitebox">
-            <Text>asd</Text>
+          <Box w="100%" h="40%" variant="whitebox" flexDirection="column">
+            <Text fontSize="24" fontWeight={"bold"}>
+              Parkolóházra vonatkozó információk
+            </Text>
+            <Text fontSize="16">
+              Parkolóház használatának feltételei, rendszám regisztráció,
+              információ
+            </Text>
           </Box>
         </Flex>
-      </HStack>
-    </View>
+      </Stack>
+    </>
   );
 }
 
