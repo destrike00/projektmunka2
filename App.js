@@ -1,4 +1,5 @@
-import * as React from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import useWebSocket, { ReadyState } from "react-use-websocket";
 import { Button } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
@@ -6,11 +7,44 @@ import { View, Flex, Stack, HStack, Box, Text } from "native-base";
 import { NativeBaseProvider } from "native-base";
 import { dustrinTheme } from "./src/style/theme";
 import Map from "./src/components/maps";
-
-const ParkingLotItem = () => {
-  return <Box h="35px" w="15px" bg="green.500" p="3" margin="5px" />;
+import API from "./backend/api";
+import SignUp from "./src/components/register";
+import SignIn from "./src/components/login";
+const ParkingLotItem = (props) => {
+  return (
+    <Box
+      h="35px"
+      w="15px"
+      bg={props.occupied === 0 ? "green.500" : "red.500"}
+      p="3"
+      margin="5px"
+      alignItems="center"
+      justifyContent={"center"}
+    >
+      <Text color="white" fontWeight="bold">
+        {props.parking_slot_number}
+      </Text>
+    </Box>
+  );
 };
 function HomeScreen({ navigation }) {
+  const [count, setCount] = useState("");
+  const [messageHistory, setMessageHistory] = useState([]);
+
+  const [data, setData] = React.useState([]);
+  React.useEffect(() => {
+    API.test().then((response) => setData(response?.data));
+    API.get_free_slot_count().then((response) => setCount(response?.data));
+  }, []);
+  const regdata = {
+    username: "test",
+    email: "test@gmail.com",
+    password: "testtest",
+  };
+  const logdata = {
+    email: "test@gmail.com",
+    password: "testtest",
+  };
   return (
     <>
       <Box
@@ -43,17 +77,42 @@ function HomeScreen({ navigation }) {
           alignItems={{ base: "center" }}
         >
           <Box w="100%" variant="whitebox">
-            <Flex h="10%" w="100%" alignItems="center" justifyContent="center">
-              <Text fontWeight={"bold"} fontSize="16">
+            <Flex
+              h="10%"
+              w="100%"
+              marginBottom="5px"
+              alignItems="center"
+              justifyContent="center"
+              flexDirection="row"
+            >
+              <Text fontWeight={"bold"} fontSize="14">
                 P2 parkolóház
+              </Text>
+              <Text
+                fontWeight="bold"
+                fontSize="14"
+                paddingLeft="5"
+                position="absolute"
+                right="0"
+              >
+                Szabad helyek: {count}
               </Text>
             </Flex>
             <Stack flexWrap="wrap" flexDirection={"row"}>
-              {Array(105)
+              {/*{Array(105)
                 .fill(1)
                 .map((el, i) => {
                   return <ParkingLotItem />;
-                })}
+                })}*/}
+              {data.map((item) => {
+                if (item.parking_slot_number > 51) return;
+                return (
+                  <ParkingLotItem
+                    occupied={item.parking_slot_status}
+                    parking_slot_number={item.parking_slot_number}
+                  />
+                );
+              })}
             </Stack>
           </Box>
           <Box w="100%" h="40%" variant="whitebox" flexDirection="column">
@@ -68,14 +127,6 @@ function HomeScreen({ navigation }) {
         </Flex>
       </Stack>
     </>
-  );
-}
-
-function NotificationsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Button onPress={() => navigation.goBack()} title="Go back home" />
-    </View>
   );
 }
 
@@ -122,8 +173,9 @@ export default function App() {
             },
           })}
         >
-          <Drawer.Screen name="Home" component={HomeScreen} />
-          <Drawer.Screen name="Notifications" component={NotificationsScreen} />
+          <Drawer.Screen name="Kezdőlap" component={HomeScreen} />
+          <Drawer.Screen name="Regisztráció" component={SignUp} />
+          <Drawer.Screen name="Bejelentkezés" component={SignIn} />
         </Drawer.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>

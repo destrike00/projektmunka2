@@ -1,10 +1,12 @@
 from pathlib import Path
-
-
+import os.path
+import sys
+PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+STATIC_URL = '/static/'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-cme**(m%-z*@fl@bzb0erhf6u5yvgm=9-fdflb(#+t_$5xx7e^'
 
@@ -23,8 +25,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'members.apps.MembersConfig',
-	'rest_framework',
+    'members.apps.MembersConfig',
+     'rest_framework',
+     "rest_framework_api_key",
+     'rest_framework.authtoken',
+     'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -35,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 CSRF_COOKIE_SECURE = False
 
@@ -63,7 +69,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'ParkingSpaceDB',
         'USER': 'postgres',
-        'PASSWORD': 'kiscica',
+        'PASSWORD': 'Sc5Snowflakex1',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -97,10 +103,14 @@ USE_I18N = True
 
 USE_TZ = True
 
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = (
+  'http://localhost:8000',
+)
 
 # Static files (CSS, JavaScript, Images)
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 
