@@ -27,7 +27,7 @@ const API = {
     return new Promise(async (resolve, reject) => {
       const asd = await _getDefaultAxios();
       asd
-        .get("test/")
+        .get("parkingslots/")
         .then((response) => {
           resolve(response);
           console.log(response);
@@ -41,7 +41,7 @@ const API = {
     return new Promise(async (resolve, reject) => {
       const asd = await _getDefaultAxios();
       asd
-        .get("free/")
+        .get("freeparkingslots/")
         .then((response) => {
           resolve(response);
           console.log(response);
