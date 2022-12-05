@@ -10,7 +10,14 @@ import Map from "./src/components/maps";
 import API from "./backend/api";
 import SignUp from "./src/components/register";
 import SignIn from "./src/components/login";
-const ParkingLotItem = (props) => {
+import Profile from "./src/components/profile";
+import Paho from "paho-mqtt";
+import mqtt from "mqtt";
+import Connection from "./src/mqtt/Connection";
+import HookMqtt from "./src/mqtt";
+import { ParkingSlotBlock } from "./src/components/parkingslotblock";
+import { AllParkingLots } from "./src/components/allparkinglots";
+export const ParkingLotItem = (props) => {
   return (
     <Box
       h="35px"
@@ -27,15 +34,8 @@ const ParkingLotItem = (props) => {
     </Box>
   );
 };
-function HomeScreen({ navigation }) {
-  const [count, setCount] = useState("");
-  const [messageHistory, setMessageHistory] = useState([]);
 
-  const [data, setData] = React.useState([]);
-  React.useEffect(() => {
-    API.test().then((response) => setData(response?.data));
-    API.get_free_slot_count().then((response) => setCount(response?.data));
-  }, []);
+function HomeScreen(props) {
   const regdata = {
     username: "test",
     email: "test@gmail.com",
@@ -45,6 +45,7 @@ function HomeScreen({ navigation }) {
     email: "test@gmail.com",
     password: "testtest",
   };
+
   return (
     <>
       <Box
@@ -76,45 +77,7 @@ function HomeScreen({ navigation }) {
           flexDirection="column"
           alignItems={{ base: "center" }}
         >
-          <Box w="100%" variant="whitebox">
-            <Flex
-              h="10%"
-              w="100%"
-              marginBottom="5px"
-              alignItems="center"
-              justifyContent="center"
-              flexDirection="row"
-            >
-              <Text fontWeight={"bold"} fontSize="14">
-                P2 parkolóház
-              </Text>
-              <Text
-                fontWeight="bold"
-                fontSize="14"
-                paddingLeft="5"
-                position="absolute"
-                right="0"
-              >
-                Szabad helyek: {count}
-              </Text>
-            </Flex>
-            <Stack flexWrap="wrap" flexDirection={"row"}>
-              {/*{Array(105)
-                .fill(1)
-                .map((el, i) => {
-                  return <ParkingLotItem />;
-                })}*/}
-              {data.map((item) => {
-                if (item.parking_slot_number > 51) return;
-                return (
-                  <ParkingLotItem
-                    occupied={item.parking_slot_status}
-                    parking_slot_number={item.parking_slot_number}
-                  />
-                );
-              })}
-            </Stack>
-          </Box>
+          <ParkingSlotBlock parkinglot="P2" payload={props.payload} />
           <Box w="100%" h="40%" variant="whitebox" flexDirection="column">
             <Text fontSize="24" fontWeight={"bold"}>
               Parkolóházra vonatkozó információk
@@ -123,61 +86,94 @@ function HomeScreen({ navigation }) {
               Parkolóház használatának feltételei, rendszám regisztráció,
               információ
             </Text>
+            <Flex w="100%" flexWrap="wrap" flexDirection="row">
+              <Button
+                w="50%"
+                p="3 "
+                onPress={() => props.navigation.navigate("AllParkingLots")}
+              >
+                <Text>Összes parkolóház foglaltságának megtekintése</Text>
+              </Button>
+              <Button
+                w="50%"
+                p="3"
+                onPress={() => props.navigation.navigate("Profil")}
+              >
+                <Text>Személyes adatok kezelése</Text>
+              </Button>
+            </Flex>
           </Box>
         </Flex>
       </Stack>
     </>
   );
 }
-
-const Drawer = createDrawerNavigator();
-
 export default function App() {
-  return (
-    <NativeBaseProvider theme={dustrinTheme}>
-      <NavigationContainer>
-        <Drawer.Navigator
-          initialRouteName="Home"
-          screenOptions={({ navigation }) => ({
-            headerShown: true,
-            headerTintColor: "#FDFDFD",
-            headerTitle: () => (
-              <Flex flexDirection="row" w="80%">
-                <HStack w="100px">{/**Logo */}</HStack>
-                <Stack
-                  marginLeft="50px"
-                  flexWrap="wrap"
-                  justifyContent="center"
-                  alignItems="center"
-                  w="100%"
-                ></Stack>
-              </Flex>
-            ),
+  const Drawer = createDrawerNavigator();
 
-            headerRight: () => (
-              <Flex flexDirection="row">
-                <HStack alignItems="center" px="2">
-                  onPress={() => navigation.navigate("Rendszerkonfigurátor")}
-                </HStack>
-                <HStack space="4" alignItems="center" px="2">
-                  {" "}
-                  {/* Ebbe a stackbe mennek a header ikonok */}
-                  onPress={() => navigation.navigate("Kosár")}
-                </HStack>
-                <HStack alignItems="center"></HStack>
-              </Flex>
-            ),
-            headerStyle: {
-              backgroundColor: "black",
-              borderBottomColor: "black",
-            },
-          })}
-        >
-          <Drawer.Screen name="Kezdőlap" component={HomeScreen} />
-          <Drawer.Screen name="Regisztráció" component={SignUp} />
-          <Drawer.Screen name="Bejelentkezés" component={SignIn} />
-        </Drawer.Navigator>
-      </NavigationContainer>
-    </NativeBaseProvider>
+  const DrawerNavigation = (props) => {
+    return (
+      <NativeBaseProvider theme={dustrinTheme}>
+        <NavigationContainer>
+          <Drawer.Navigator
+            initialRouteName="Kezdőlap"
+            screenOptions={({ navigation }) => ({
+              headerShown: true,
+              headerTintColor: "#FDFDFD",
+              headerTitle: () => (
+                <Flex flexDirection="row" w="80%">
+                  <HStack w="100px">{/**Logo */}</HStack>
+                  <Stack
+                    marginLeft="50px"
+                    flexWrap="wrap"
+                    justifyContent="center"
+                    alignItems="center"
+                    w="100%"
+                  ></Stack>
+                </Flex>
+              ),
+
+              headerRight: () => (
+                <Flex flexDirection="row">
+                  <HStack alignItems="center" px="2">
+                    onPress={() => navigation.navigate("Rendszerkonfigurátor")}
+                  </HStack>
+                  <HStack space="4" alignItems="center" px="2">
+                    {" "}
+                    {/* Ebbe a stackbe mennek a header ikonok */}
+                    onPress={() => navigation.navigate("Kosár")}
+                  </HStack>
+                  <HStack alignItems="center"></HStack>
+                </Flex>
+              ),
+              headerStyle: {
+                backgroundColor: "black",
+                borderBottomColor: "black",
+              },
+            })}
+          >
+            <Drawer.Screen name="Kezdőlap" component={HomeScreen} />
+            <Drawer.Screen name="Regisztráció" component={SignUp} />
+            <Drawer.Screen name="Bejelentkezés" component={SignIn} />
+            <Drawer.Screen
+              name="Profil"
+              navigation={navigation}
+              component={Profile}
+            />
+            <Drawer.Screen
+              name="AllParkingLots"
+              navigation={navigation}
+              component={AllParkingLots}
+            />
+          </Drawer.Navigator>
+        </NavigationContainer>
+      </NativeBaseProvider>
+    );
+  };
+
+  return (
+    <>
+      <DrawerNavigation />
+    </>
   );
 }

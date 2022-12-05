@@ -7,10 +7,11 @@ from .models import TblParkingSpot
 from main.serializers import RegisterSerializer
 import json
 from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
+
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login
-
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class RegisterAPIView(generics.GenericAPIView):
 	serializer_class=RegisterSerializer
@@ -19,6 +20,7 @@ class RegisterAPIView(generics.GenericAPIView):
 		print("\n\n\n",serializers)
 		if serializers.is_valid():
 			serializers.save()
+
 			return Response("User created!")
 
 		return Response("Error")

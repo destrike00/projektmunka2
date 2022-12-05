@@ -23,7 +23,7 @@ async function _getDefaultAxios(headers) {
 }
 
 const API = {
-  test() {
+  get_parking_slots() {
     return new Promise(async (resolve, reject) => {
       const asd = await _getDefaultAxios();
       asd
@@ -41,7 +41,7 @@ const API = {
     return new Promise(async (resolve, reject) => {
       const asd = await _getDefaultAxios();
       asd
-        .get("freeparkingslots/")
+        .get(`freeparkingslots`)
         .then((response) => {
           resolve(response);
           console.log(response);

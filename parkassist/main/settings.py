@@ -15,21 +15,23 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'members.apps.MembersConfig',
+
      'rest_framework',
      "rest_framework_api_key",
      'rest_framework.authtoken',
      'corsheaders',
+     'members',
+
 ]
 
 MIDDLEWARE = [
@@ -63,7 +65,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'main.wsgi.application'
-
+AUTH_USER_MODEL = 'members.TblVehicleOwner'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',

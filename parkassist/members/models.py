@@ -7,6 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
+from django.contrib.auth.models import AbstractUser
 
 class TblBooking(models.Model):
     booking_id = models.AutoField(primary_key=True)
@@ -52,13 +53,13 @@ class TblVehicleCategory(models.Model):
         db_table = 'tbl_vehicle_category'
 
 
-class TblVehicleOwner(models.Model):
+class TblVehicleOwner(AbstractUser):
     vehicle_owner_id = models.AutoField(primary_key=True)
-    vehicle_owner_name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=150)
     vehicle_owner_contact = models.IntegerField()
-    vehicle_owner_email = models.CharField(max_length=30)
-    owner_username = models.CharField(max_length=30)
-    owner_password = models.CharField(max_length=30)
+    email = models.CharField(max_length=30)
+
 
     class Meta:
         managed = False

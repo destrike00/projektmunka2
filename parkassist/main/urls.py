@@ -12,7 +12,8 @@ urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('parkingslots/', ParkingSlotView.as_view()),
 	path('updateparkingslots/<int:id>/',ModifyParkingSlot, name="modify-parkingslot"),
-	path('freeparkingslots/', FreeSlotView.as_view()),
+	path('freeparkingslots', FreeSlotView.as_view()),
 	path('register/',RegisterAPIView.as_view()),
-	path('login/',LoginAPIView.as_view())
+	path('login/',LoginAPIView.as_view()),
+
 ]
